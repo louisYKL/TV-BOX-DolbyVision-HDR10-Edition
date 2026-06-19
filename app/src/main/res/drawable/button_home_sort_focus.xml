@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="@dimen/vs_28"/>
+                    <gradient
+                        android:angle="315"
+                        android:centerColor="#FFFFFFFF"
+                        android:endColor="#DDEBF6FF"
+                        android:startColor="#FFF9FDFF"/>
+                    <stroke android:width="@dimen/vs_1" android:color="@color/apple_tv_focus" />
+                </shape>
+            </item>
+            <item
+                android:left="@dimen/vs_1"
+                android:top="@dimen/vs_1"
+                android:right="@dimen/vs_1"
+                android:bottom="@dimen/vs_1">
+                <shape>
+                    <corners android:radius="@dimen/vs_28"/>
+                    <gradient
+                        android:angle="270"
+                        android:endColor="#00FFFFFF"
+                        android:startColor="#61FFFFFF"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+    <item android:state_focused="false">
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="@dimen/vs_28"/>
+                    <gradient
+                        android:angle="315"
+                        android:centerColor="#A2252E39"
+                        android:endColor="#8D1E2731"
+                        android:startColor="#BB19212A" />
+                    <stroke android:width="@dimen/vs_1" android:color="@color/apple_tv_glass_edge" />
+                </shape>
+            </item>
+            <item
+                android:left="@dimen/vs_1"
+                android:top="@dimen/vs_1"
+                android:right="@dimen/vs_1"
+                android:bottom="@dimen/vs_1">
+                <shape>
+                    <corners android:radius="@dimen/vs_28"/>
+                    <gradient
+                        android:angle="270"
+                        android:endColor="#00FFFFFF"
+                        android:startColor="#18FFFFFF" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

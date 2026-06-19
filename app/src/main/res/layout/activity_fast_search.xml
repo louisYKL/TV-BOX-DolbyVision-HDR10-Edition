@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_apple_tv_shell">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_apple_tv_scrim_bottom" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/vs_110"
+            android:layout_marginTop="@dimen/vs_20"
+            android:layout_marginBottom="@dimen/vs_16"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/vs_48"
+            android:paddingEnd="@dimen/vs_48">
+
+            <TextView
+                android:id="@+id/mSearchTitle"
+                android:layout_width="@dimen/vs_200"
+                android:layout_height="@dimen/vs_76"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/vs_4"
+                android:gravity="center"
+                android:text="搜索(0/0)"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_22" />
+
+            <com.owen.tvrecyclerview.widget.TvRecyclerView
+                android:id="@+id/mGridViewWordFenci"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/vs_96"
+                android:layout_marginTop="@dimen/vs_0"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:paddingStart="@dimen/vs_8"
+                android:paddingEnd="@dimen/vs_8"
+                android:paddingTop="@dimen/vs_8"
+                android:paddingBottom="@dimen/vs_8"
+                app:tv_horizontalSpacingWithMargins="@dimen/vs_14"
+                app:tv_selectedItemIsCentered="true"
+                app:tv_verticalSpacingWithMargins="@dimen/vs_14" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout
+                android:id="@+id/llWord"
+                android:layout_width="@dimen/vs_240"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/vs_36"
+                android:layout_marginEnd="@dimen/vs_20"
+                android:layout_marginBottom="@dimen/vs_22"
+                android:tag="static-glass"
+                android:paddingStart="@dimen/vs_16"
+                android:paddingTop="@dimen/vs_18"
+                android:paddingEnd="@dimen/vs_16"
+                android:paddingBottom="@dimen/vs_18">
+
+                <com.owen.tvrecyclerview.widget.TvRecyclerView
+                    android:id="@+id/mGridViewWord"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:focusable="true"
+                    android:paddingTop="@dimen/vs_4"
+                    android:paddingBottom="@dimen/vs_4"
+                    android:paddingStart="@dimen/vs_8"
+                    android:paddingEnd="@dimen/vs_8"
+                    app:tv_horizontalSpacingWithMargins="@dimen/vs_14"
+                    app:tv_selectedItemIsCentered="false"
+                    app:tv_verticalSpacingWithMargins="@dimen/vs_14" />
+            </com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout>
+
+            <com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout
+                android:id="@+id/llLayout"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/vs_36"
+                android:layout_marginBottom="@dimen/vs_22"
+                android:layout_weight="1"
+                android:tag="static-glass"
+                android:paddingStart="@dimen/vs_24"
+                android:paddingTop="@dimen/vs_18"
+                android:paddingEnd="@dimen/vs_24"
+                android:paddingBottom="@dimen/vs_24"
+                tools:ignore="InOrMmUsage">
+
+                <com.owen.tvrecyclerview.widget.TvRecyclerView
+                    android:id="@+id/mGridView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/vs_8"
+                    android:paddingEnd="@dimen/vs_8"
+                    android:paddingTop="@dimen/vs_8"
+                    android:paddingBottom="@dimen/vs_8"
+                    android:visibility="invisible"
+                    app:tv_horizontalSpacingWithMargins="@dimen/vs_18"
+                    app:tv_selectedItemIsCentered="true"
+                    app:tv_verticalSpacingWithMargins="@dimen/vs_18" />
+
+                <com.owen.tvrecyclerview.widget.TvRecyclerView
+                    android:id="@+id/mGridViewFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
+                    android:paddingStart="@dimen/vs_8"
+                    android:paddingEnd="@dimen/vs_8"
+                    android:paddingTop="@dimen/vs_8"
+                    android:paddingBottom="@dimen/vs_8"
+                    android:visibility="invisible"
+                    app:tv_horizontalSpacingWithMargins="@dimen/vs_18"
+                    app:tv_selectedItemIsCentered="true"
+                    app:tv_verticalSpacingWithMargins="@dimen/vs_18" />
+            </com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

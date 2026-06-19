@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/vs_58"
+    android:layout_marginTop="@dimen/vs_3"
+    android:layout_marginBottom="@dimen/vs_3"
+    android:background="@drawable/bg_search_word_button"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:minWidth="@dimen/vs_118"
+    android:paddingStart="@dimen/vs_10"
+    android:paddingEnd="@dimen/vs_10"
+    android:visibility="visible">
+
+    <TextView
+        android:id="@+id/tvSearchWord"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:duplicateParentState="true"
+        android:ellipsize="end"
+        android:focusable="false"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:marqueeRepeatLimit="1"
+        android:maxLines="1"
+        android:paddingStart="@dimen/vs_8"
+        android:paddingEnd="@dimen/vs_8"
+        android:scrollHorizontally="false"
+        android:singleLine="true"
+        android:textColor="@color/search_word_text"
+        android:textSize="@dimen/ts_18"
+        android:visibility="visible" />
+</FrameLayout>

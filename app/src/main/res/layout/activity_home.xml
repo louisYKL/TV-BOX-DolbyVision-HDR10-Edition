@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_apple_tv_shell">
+
+    <View
+        android:id="@+id/bgScrimTop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_apple_tv_scrim_top"
+        app:layout_constraintBottom_toTopOf="@id/contentLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bgScrimBottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_apple_tv_scrim_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/contentLayout" />
+
+    <com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout
+        android:id="@+id/topLayout"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/vs_70"
+        android:layout_marginStart="@dimen/vs_48"
+        android:layout_marginTop="@dimen/vs_20"
+        android:layout_marginEnd="@dimen/vs_48"
+        android:tag="ambient-glass"
+        android:paddingStart="@dimen/vs_28"
+        android:paddingEnd="@dimen/vs_28"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:text="@string/app_name"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_30"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textColor="@color/apple_tv_text_secondary"
+                android:textSize="@dimen/ts_20"
+                tools:text="2026/06/15 20:00" />
+        </LinearLayout>
+    </com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout>
+
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/vs_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topLayout">
+
+        <com.owen.tvrecyclerview.widget.TvRecyclerView
+            android:id="@+id/mGridView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/vs_48"
+            android:paddingEnd="@dimen/vs_48"
+            app:tv_selectedItemIsCentered="true" />
+
+        <com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager
+            android:id="@+id/mViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient
+        android:angle="315"
+        android:centerColor="#111A24"
+        android:endColor="@color/apple_tv_bg_secondary"
+        android:startColor="@color/apple_tv_bg" />
+    <corners android:radius="0dp" />
+</shape>

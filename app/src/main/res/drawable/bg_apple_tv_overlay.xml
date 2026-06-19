@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <corners android:radius="@dimen/vs_24" />
+            <gradient
+                android:angle="315"
+                android:centerColor="@color/apple_tv_material_mid"
+                android:endColor="#D010151D"
+                android:startColor="@color/apple_tv_material_core" />
+            <stroke
+                android:width="@dimen/vs_1"
+                android:color="@color/apple_tv_glass_edge" />
+        </shape>
+    </item>
+    <item
+        android:left="@dimen/vs_1"
+        android:top="@dimen/vs_1"
+        android:right="@dimen/vs_1"
+        android:bottom="@dimen/vs_1">
+        <shape>
+            <corners android:radius="@dimen/vs_22" />
+            <gradient
+                android:angle="270"
+                android:endColor="#00FFFFFF"
+                android:startColor="@color/apple_tv_material_lens" />
+        </shape>
+    </item>
+    <item
+        android:left="@dimen/vs_2"
+        android:top="@dimen/vs_2"
+        android:right="@dimen/vs_2"
+        android:bottom="@dimen/vs_2">
+        <shape>
+            <corners android:radius="@dimen/vs_22" />
+            <stroke
+                android:width="@dimen/vs_1"
+                android:color="@color/apple_tv_material_lens_soft" />
+        </shape>
+    </item>
+</layer-list>

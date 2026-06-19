@@ -1,0 +1,918 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/vs_6">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/vs_20">
+
+            <LinearLayout
+                android:id="@+id/llDebug"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_14"
+                android:background="@drawable/shape_setting_model_focus"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/vs_82"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/vs_22"
+                android:paddingTop="@dimen/vs_16"
+                android:paddingEnd="@dimen/vs_22"
+                android:paddingBottom="@dimen/vs_16"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="调试模式"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_24"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_4"
+                        android:text="显示隐藏调试能力。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvDebugOpen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:maxWidth="@dimen/vs_220"
+                    android:textColor="@color/apple_tv_text_primary"
+                    android:textSize="@dimen/ts_20"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_14"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/llApi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_108"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_22">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="配置地址"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_24"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_4"
+                        android:text="填写订阅源与主配置。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+
+                    <TextView
+                        android:id="@+id/tvApi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:ellipsize="middle"
+                        android:maxLines="2"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llApiHistory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_108"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_22">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="配置历史"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_24"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_4"
+                        android:text="快速回切最近使用的地址。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+
+                    <TextView
+                        android:id="@+id/tvMediaCodec1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/apple_tv_text_muted"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_22"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/llHomeApi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_108"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_22">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="首页站源"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_24"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_4"
+                        android:text="选择首页默认展示的数据来源。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+
+                    <TextView
+                        android:id="@+id/tvHomeApi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tvHomeLive"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_108"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_22">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="下次进入"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_24"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_4"
+                        android:text="决定开机先进入点播还是直播。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+
+                    <TextView
+                        android:id="@+id/tvHomeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_22"
+                android:background="@drawable/shape_setting_model_focus"
+                android:focusable="false"
+                android:minHeight="@dimen/vs_96"
+                android:orientation="vertical"
+                android:padding="@dimen/vs_20">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="设备 HDR 能力"
+                    android:textColor="@color/apple_tv_text_primary"
+                    android:textSize="@dimen/ts_22"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvHdrSupport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/vs_12"
+                    android:textColor="@color/apple_tv_text_primary"
+                    android:textSize="@dimen/ts_18" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_12"
+                android:text="播放"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_28"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_14"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/llPlay"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="默认播放器"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPlay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llRender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="渲染方式"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvRenderType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llScale"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="画面缩放"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvScaleType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_22"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/llAudioPassthrough"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="音频透传"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvAudioPassthrough"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_12"
+                android:text="网络与解析"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_28"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_14"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/llDns"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="安全 DNS"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvDns"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llParseWebVew"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="解析 WebView"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvParseWebView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llSearchTv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="搜索附近 TVBox"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:text="发现可投送或联动的同局域网设备。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_12"
+                android:text="显示与内容"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_28"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_14"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/llHomeRec"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="首页推荐"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvHomeRec"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llHomeRecStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="首页多行"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/showRecStyleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llSearchView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="搜索展示"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvSearchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_14"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/showFastSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="快速搜索"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/showFastSearchText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/m3u8Ad"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="M3U8 广告净化"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/m3u8AdText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/showPreview"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="窗口预览"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/showPreviewText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_22"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/llHistoryNum"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="历史记录"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvHistoryNum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_18" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llWp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="换张壁纸"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:text="下载当前源提供的壁纸并应用。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llWpRecovery"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="重置壁纸"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:text="恢复默认背景样式。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/vs_12"
+                android:text="数据与工具"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_28"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:id="@+id/llClearCache"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="清空缓存"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:text="删除播放与 JAR 缓存。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llBackup"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_marginEnd="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="数据备份"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:text="导出或恢复配置和记录。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llAbout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/vs_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_setting_model_focus"
+                    android:focusable="true"
+                    android:minHeight="@dimen/vs_96"
+                    android:orientation="vertical"
+                    android:padding="@dimen/vs_20">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="关于"
+                        android:textColor="@color/apple_tv_text_primary"
+                        android:textSize="@dimen/ts_22"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/vs_12"
+                        android:text="查看版本与项目信息。"
+                        android:textColor="@color/apple_tv_text_secondary"
+                        android:textSize="@dimen/ts_16" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

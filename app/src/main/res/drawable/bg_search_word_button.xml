@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@drawable/bg_search_word_button_active" />
+    <item android:state_selected="true" android:drawable="@drawable/bg_search_word_button_active" />
+    <item android:state_pressed="true" android:drawable="@drawable/bg_search_word_button_active" />
+    <item>
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="@dimen/vs_18" />
+                    <gradient
+                        android:angle="315"
+                        android:centerColor="#8F2B3744"
+                        android:endColor="#7318212C"
+                        android:startColor="#A51D2632" />
+                    <stroke
+                        android:width="@dimen/vs_1"
+                        android:color="@color/apple_tv_glass_edge" />
+                </shape>
+            </item>
+            <item
+                android:left="@dimen/vs_1"
+                android:top="@dimen/vs_1"
+                android:right="@dimen/vs_1"
+                android:bottom="@dimen/vs_1">
+                <shape>
+                    <corners android:radius="@dimen/vs_17" />
+                    <gradient
+                        android:angle="270"
+                        android:endColor="#00FFFFFF"
+                        android:startColor="#22FFFFFF" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>

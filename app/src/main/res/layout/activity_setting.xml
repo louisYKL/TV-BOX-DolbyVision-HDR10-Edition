@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_apple_tv_shell"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/vs_36"
+    android:paddingTop="@dimen/vs_24"
+    android:paddingEnd="@dimen/vs_36"
+    android:paddingBottom="@dimen/vs_24">
+
+    <LinearLayout
+        android:layout_width="@dimen/vs_270"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/vs_20"
+        android:background="@drawable/bg_apple_tv_panel"
+        android:orientation="vertical"
+        android:padding="@dimen/vs_24">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="设置"
+            android:textColor="@color/apple_tv_text_primary"
+            android:textSize="@dimen/ts_32"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/vs_8"
+            android:lineSpacingExtra="@dimen/vs_2"
+            android:text="Source, playback and appearance"
+            android:textColor="@color/apple_tv_text_secondary"
+            android:textSize="@dimen/ts_18" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/vs_1"
+            android:layout_marginTop="@dimen/vs_18"
+            android:layout_marginBottom="@dimen/vs_18"
+            android:background="@color/color_33FFFFFF" />
+
+        <com.owen.tvrecyclerview.widget.TvRecyclerView
+            android:id="@+id/mGridView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_apple_tv_panel"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/vs_28"
+            android:paddingTop="@dimen/vs_20"
+            android:paddingEnd="@dimen/vs_28"
+            android:paddingBottom="@dimen/vs_20">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="播放与体验"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_32"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/vs_6"
+                android:lineSpacingExtra="@dimen/vs_2"
+                android:text="按最新 Apple TV 风格重排，优先保证焦点层级、留白和可读性。"
+                android:textColor="@color/apple_tv_text_secondary"
+                android:textSize="@dimen/ts_18" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/vs_16"
+            android:layout_weight="1">
+
+            <com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager
+                android:id="@+id/mViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
