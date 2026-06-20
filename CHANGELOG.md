@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.1.3
+
+### 中文
+
+- 修正 `java64` 非电视设备的系统播放器渲染层：系统硬解默认改走 `TextureView`，避免 `SurfaceView` 覆盖触控层导致全屏无法单击、菜单无法呼出或手势失效。
+- 为 `PlayActivity` 增加全屏触控顶层分发兜底，并补齐 `BaseController` 的 `OnDoubleTapListener` 注册，收紧 64 位手机 / 平板全屏触控链路。
+- 收紧 32 位杜比视界路由：真实支持原生 DV 的设备不再被本地代理 MKV 预探测误降级；不支持原生 DV 但支持 HDR10 的设备，对双层 / HDR10 基础层 DV 优先走系统硬解 HDR10 基础层，降低灰屏风险。
+- 保留真实支持原生杜比视界的 64 位设备优先走系统链路，避免本地代理 MKV / DV 在预探测不完整时被误降级到兼容映射链。
+- 补充系统播放器音轨选择与运行日志，以及 MPV 在 64 位触屏设备上的音频安全模式，继续收敛“有画面没声音 / 音轨未正确选中”的问题。
+- 统一三套 Android 包的发布版本为 `0.1.3`：`java32`、`java64`、`hisense32`。
+
+### English
+
+- Fixed the `java64` non-TV system-player render path by preferring `TextureView`, preventing `SurfaceView` from swallowing fullscreen taps, menu gestures, and touch interaction.
+- Added activity-level fullscreen touch dispatch in `PlayActivity` and completed `OnDoubleTapListener` registration in `BaseController` to stabilize fullscreen controls on 64-bit phones and tablets.
+- Tightened the 32-bit Dolby Vision route: true native-DV devices are no longer downgraded by incomplete local-proxy MKV probes, and HDR-capable non-native-DV devices now prefer the system-player HDR10 base layer for dual-layer / base-layer DV streams to reduce gray-screen cases.
+- Kept true native-Dolby-Vision 64-bit devices on the system playback path so local-proxy MKV / DV streams are not downgraded to the compatibility mapping chain too aggressively.
+- Added stronger system-player audio-track selection/logging and an MPV audio safe-mode branch for 64-bit touch devices to further reduce silent-playback edge cases.
+- Unified the three Android deliverables under release `0.1.3`: `java32`, `java64`, and `hisense32`.
+
 ## 0.1.1
 
 ### 中文

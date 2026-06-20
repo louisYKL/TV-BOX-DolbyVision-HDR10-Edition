@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.player;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -26,6 +27,7 @@ public final class MPVCompatManager {
     private static volatile boolean preferHdrOutput = true;
     private static volatile String outputMode = "base-hdr";
     private static volatile int hdrTargetPeakNits = 1000;
+    private static volatile boolean java64PhoneAudioSafeMode = false;
     private static final String VO_GPU = "gpu";
 
     private MPVCompatManager() {
@@ -50,6 +52,7 @@ public final class MPVCompatManager {
             }
             HdrDeviceSupport.Capabilities caps = HdrDeviceSupport.query(appContext);
             hdrTargetPeakNits = caps.hdrTargetPeakNits();
+            java64PhoneAudioSafeMode = isJava64Phone(appContext);
             copyAssetIfNeeded(appContext, "cacert.pem", new File(appContext.getFilesDir(), "cacert.pem"));
             if (!CREATED.get()) {
                 MPVLib.create(appContext);
@@ -321,8 +324,13 @@ public final class MPVCompatManager {
         setRuntimeDouble("volume", 100d);
         setRuntimeBoolean("mute", false);
         setRuntimeString("audio-device", "auto");
-        setRuntimeString("audio-set-media-role", "yes");
         setRuntimeString("audio-stream-silence", "no");
+        if (java64PhoneAudioSafeMode) {
+            setRuntimeString("audio-client-name", "TVBox");
+            setRuntimeString("audio-set-media-role", "no");
+        } else {
+            setRuntimeString("audio-set-media-role", "yes");
+        }
         if (passthrough) {
             setRuntimeString("audio-exclusive", "yes");
             setRuntimeString("audio-spdif", "ac3,eac3,dts,dts-hd,truehd");
@@ -330,7 +338,28 @@ public final class MPVCompatManager {
             setRuntimeString("audio-exclusive", "no");
             setRuntimeString("audio-spdif", "");
         }
-        LOG.i("echo-mpv-audio passthrough=" + passthrough + " volume=100");
+        LOG.i("echo-mpv-audio passthrough=" + passthrough
+                + " volume=100 safePhoneMode=" + java64PhoneAudioSafeMode);
+    }
+
+    private static boolean isJava64Phone(@NonNull Context context) {
+        if (!com.github.tvbox.osc.base.App.isJava64Build()) {
+            return false;
+        }
+        try {
+            PackageManager pm = context.getPackageManager();
+            if (pm != null) {
+                if (pm.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+                        || pm.hasSystemFeature(PackageManager.FEATURE_TELEVISION)) {
+                    return false;
+                }
+                if (!pm.hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN)) {
+                    return false;
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return true;
     }
 
     private static void applySubtitleOutputOptions() {

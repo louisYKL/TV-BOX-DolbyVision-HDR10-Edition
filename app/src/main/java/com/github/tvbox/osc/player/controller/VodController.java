@@ -27,6 +27,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.server.ControlManager;
@@ -74,6 +75,7 @@ import java.util.Map;
 import java.util.Arrays;
 
 import xyz.doikki.videoplayer.player.VideoView;
+import xyz.doikki.videoplayer.util.PlayerUtils;
 
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 import static xyz.doikki.videoplayer.util.PlayerUtils.seconds2Time;
@@ -334,8 +336,12 @@ public class VodController extends BaseController {
                     if (event.getAction() == MotionEvent.ACTION_UP) {
                         showLockView();
                     }
+                    return true;
                 }
-                return isLock;
+                if (isJava64TouchPhone()) {
+                    return VodController.this.onTouchEvent(event);
+                }
+                return false;
             }
         });
 
@@ -1061,16 +1067,17 @@ public class VodController extends BaseController {
     }
 
     private void setControllerTreeInteractive(boolean enabled) {
+        boolean touchPhone = isJava64TouchPhone();
         setFocusable(enabled);
-        setFocusableInTouchMode(enabled);
-        setClickable(enabled);
+        setFocusableInTouchMode(enabled || touchPhone);
+        setClickable(enabled || touchPhone);
         if (!enabled) {
             clearFocus();
         }
         if (mPlaybackFocusAnchor != null) {
             mPlaybackFocusAnchor.setFocusable(enabled);
-            mPlaybackFocusAnchor.setFocusableInTouchMode(enabled);
-            mPlaybackFocusAnchor.setClickable(enabled);
+            mPlaybackFocusAnchor.setFocusableInTouchMode(enabled || touchPhone);
+            mPlaybackFocusAnchor.setClickable(enabled || touchPhone);
             if (mPlaybackFocusAnchor instanceof ViewGroup) {
                 ((ViewGroup) mPlaybackFocusAnchor).setDescendantFocusability(enabled
                         ? ViewGroup.FOCUS_BEFORE_DESCENDANTS
@@ -1080,6 +1087,14 @@ public class VodController extends BaseController {
                 mPlaybackFocusAnchor.clearFocus();
             }
         }
+    }
+
+    private boolean isJava64TouchPhone() {
+        if (!App.isJava64Build()) {
+            return false;
+        }
+        Activity activity = PlayerUtils.scanForActivity(getContext());
+        return activity instanceof BaseActivity && !((BaseActivity) activity).isTvDevice();
     }
 
     private boolean enterFullScreenFromPreview() {

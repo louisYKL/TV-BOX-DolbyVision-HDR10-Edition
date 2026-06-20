@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
@@ -158,6 +159,34 @@ public class PlayActivity extends BaseActivity {
     private HashMap<String, String> pendingSystemFallbackHeaders;
     private boolean systemFallbackTried;
     private int subtitleTextStyle = 0;
+    private final View.OnLayoutChangeListener fullScreenStateSyncLayoutListener = new View.OnLayoutChangeListener() {
+        @Override
+        public void onLayoutChange(View v,
+                                   int left,
+                                   int top,
+                                   int right,
+                                   int bottom,
+                                   int oldLeft,
+                                   int oldTop,
+                                   int oldRight,
+                                   int oldBottom) {
+            if (!App.isJava64Build() || isTvDevice() || mVideoView == null || mController == null) {
+                return;
+            }
+            if (left == oldLeft && top == oldTop && right == oldRight && bottom == oldBottom) {
+                return;
+            }
+            mVideoView.post(new Runnable() {
+                @Override
+                public void run() {
+                    syncEmbeddedControllerMode();
+                    if (mController != null) {
+                        mController.syncFullScreenControlState();
+                    }
+                }
+            });
+        }
+    };
 
     private static final class PlaybackPreflight {
         final String rawUrl;
@@ -364,13 +393,13 @@ public class PlayActivity extends BaseActivity {
         });
         mVideoView = findViewById(R.id.mVideoView);
         mVideoView.setKeepSurfaceOnFullScreen(true);
-        mVideoView.setEnableAudioFocus(false);
+        mVideoView.setEnableAudioFocus(isJava64TouchPhone());
         mPlayLoadTip = findViewById(R.id.play_load_tip);
         mPlayLoading = findViewById(R.id.play_loading);
         mPlayLoadErr = findViewById(R.id.play_load_error);
         mController = new VodController(this);
         mController.setCanChangePosition(true);
-        mController.setEnableInNormal(true);
+        mController.setEnableInNormal(!isJava64TouchPhone());
         mController.setGestureEnabled(true);
         ProgressManager progressManager = new ProgressManager() {
             @Override
@@ -388,6 +417,12 @@ public class PlayActivity extends BaseActivity {
             @Override
             public void onPlayerStateChanged(int playerState) {
                 if (playerState == VideoView.PLAYER_FULL_SCREEN || playerState == VideoView.PLAYER_NORMAL) {
+                    if (App.isJava64Build() && !isTvDevice()) {
+                        syncEmbeddedControllerMode();
+                        if (mController != null) {
+                            mController.syncFullScreenControlState();
+                        }
+                    }
                     syncHdrWindowForCurrentPlayback("activity-player-state-" + playerState);
                 }
             }
@@ -507,6 +542,9 @@ public class PlayActivity extends BaseActivity {
             public void setAllowSwitchPlayer(boolean isAllow){allowSwitchPlayer=isAllow;}
         });
         mVideoView.setVideoController(mController);
+        if (App.isJava64Build() && !isTvDevice()) {
+            mVideoView.addOnLayoutChangeListener(fullScreenStateSyncLayoutListener);
+        }
     }
 
     //设置字幕
@@ -1695,7 +1733,7 @@ public class PlayActivity extends BaseActivity {
                     public void run() {
                         if (mController != null) {
                             syncEmbeddedControllerMode();
-                            mController.setForceFullScreenInputMode(isPlayerVisuallyFullScreen());
+                            mController.setForceFullScreenInputMode(isControllerInputFullScreen());
                             mController.syncFullScreenControlState();
                         }
                     }
@@ -1772,8 +1810,40 @@ public class PlayActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (isJava64TouchPhone()
+                && ev != null
+                && mVideoView != null
+                && mController != null
+                && mVideoView.isFullScreen()) {
+            try {
+                if (mController.dispatchTouchEvent(ev)) {
+                    return true;
+                }
+            } catch (Throwable th) {
+                LOG.e("echo-touch-dispatch failed: " + th.getMessage());
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
     private boolean shouldRouteKeyToController() {
-        return mVideoView != null && (mVideoView.isFullScreen() || isPlayerVisuallyFullScreen());
+        return mVideoView != null && isControllerInputFullScreen();
+    }
+
+    private boolean isJava64TouchPhone() {
+        return App.isJava64Build() && !isTvDevice();
+    }
+
+    private boolean isControllerInputFullScreen() {
+        if (mVideoView == null) {
+            return false;
+        }
+        if (isJava64TouchPhone()) {
+            return mVideoView.isFullScreen();
+        }
+        return mVideoView.isFullScreen() || isPlayerVisuallyFullScreen();
     }
 
     private boolean isPlayerVisuallyFullScreen() {
@@ -1796,12 +1866,12 @@ public class PlayActivity extends BaseActivity {
 
     private void syncEmbeddedControllerMode() {
         if (mController != null) {
-            boolean visuallyFull = isPlayerVisuallyFullScreen();
-            mController.setForceFullScreenInputMode(visuallyFull);
-            mController.setEmbeddedPreviewMode(mVideoView == null || (!mVideoView.isFullScreen() && !visuallyFull));
+            boolean fullScreenInput = isControllerInputFullScreen();
+            mController.setForceFullScreenInputMode(fullScreenInput);
+            mController.setEmbeddedPreviewMode(!fullScreenInput);
         }
         updatePhoneFullScreenGestureExclusion();
-        if (mVideoView != null && !mVideoView.isFullScreen() && !isPlayerVisuallyFullScreen()) {
+        if (mVideoView != null && !isControllerInputFullScreen()) {
             restorePreviewPlayerFocus();
         }
     }
@@ -1816,7 +1886,7 @@ public class PlayActivity extends BaseActivity {
                 if (mVideoView == null) {
                     return;
                 }
-                boolean fullScreenInput = mVideoView.isFullScreen() || isPlayerVisuallyFullScreen();
+                boolean fullScreenInput = isControllerInputFullScreen();
                 if (!fullScreenInput || mVideoView.getWidth() <= 0 || mVideoView.getHeight() <= 0) {
                     mVideoView.setSystemGestureExclusionRects(Collections.<Rect>emptyList());
                     return;
@@ -1857,6 +1927,9 @@ public class PlayActivity extends BaseActivity {
         playbackProbeExecutor.shutdownNow();
         cancelPlayTimeout();
         if (mVideoView != null) {
+            if (App.isJava64Build() && !isTvDevice()) {
+                mVideoView.removeOnLayoutChangeListener(fullScreenStateSyncLayoutListener);
+            }
             persistPlaybackProgress();
             forceReleaseCurrentPlayer("activity-destroy");
             mVideoView = null;

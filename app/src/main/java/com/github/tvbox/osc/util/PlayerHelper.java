@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.github.tvbox.osc.player.MPVCompatManager;
@@ -34,6 +35,29 @@ public class PlayerHelper {
     public static final int PLAYER_TYPE_SYSTEM = 0;
     public static final int PLAYER_TYPE_DOLBY_VISION_COMPAT = 6;
 
+    private static boolean shouldUseTextureRenderForSystemPlayer(@androidx.annotation.Nullable Context context) {
+        if (!com.github.tvbox.osc.base.App.isJava64Build()) {
+            return false;
+        }
+        if (context == null) {
+            return false;
+        }
+        try {
+            PackageManager pm = context.getPackageManager();
+            if (pm != null) {
+                if (pm.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+                        || pm.hasSystemFeature(PackageManager.FEATURE_TELEVISION)) {
+                    return false;
+                }
+                if (!pm.hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN)) {
+                    return false;
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
+    }
+
     public static void updateCfg(VideoView videoView, JSONObject playerCfg) {
         updateCfg(videoView,playerCfg,-1);
     }
@@ -42,6 +66,8 @@ public class PlayerHelper {
         int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 1);
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
         boolean preferHdrOutput = true;
+        Context context = videoView == null ? null : videoView.getContext();
+        boolean preferTextureSystemRender = shouldUseTextureRenderForSystemPlayer(context);
         try {
             playerType = playerCfg.getInt("pl");
             renderType = playerCfg.getInt("pr");
@@ -54,11 +80,13 @@ public class PlayerHelper {
         if (playerType != PLAYER_TYPE_SYSTEM && playerType != PLAYER_TYPE_DOLBY_VISION_COMPAT) {
             playerType = PLAYER_TYPE_SYSTEM;
         }
-        if (playerType == PLAYER_TYPE_SYSTEM && renderType != 1) {
-            renderType = 1;
+        if (playerType == PLAYER_TYPE_SYSTEM) {
+            renderType = preferTextureSystemRender ? 0 : 1;
         }
-        if (playerType == PLAYER_TYPE_SYSTEM || playerType == PLAYER_TYPE_DOLBY_VISION_COMPAT) {
+        if (playerType == PLAYER_TYPE_DOLBY_VISION_COMPAT) {
             renderType = 1;
+            scale = VideoView.SCREEN_SCALE_DEFAULT;
+        } else if (playerType == PLAYER_TYPE_SYSTEM) {
             scale = VideoView.SCREEN_SCALE_DEFAULT;
         }
         RenderViewFactory renderViewFactory = null;
@@ -78,6 +106,9 @@ public class PlayerHelper {
                 renderViewFactory = SurfaceRenderViewFactory.create();
             } else {
                 videoView.setPlayerFactory(AndroidMediaPlayerFactory.create());
+                renderViewFactory = preferTextureSystemRender
+                        ? TextureRenderViewFactory.create()
+                        : SurfaceRenderViewFactory.create();
             }
             videoView.setRenderViewFactory(renderViewFactory);
             videoView.setScreenScaleType(VideoView.SCREEN_SCALE_DEFAULT);
@@ -85,10 +116,8 @@ public class PlayerHelper {
     }
 
     public static void updateCfg(VideoView videoView) {
-        int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 1);
-        if (renderType != 1) {
-            renderType = 1;
-        }
+        boolean preferTextureSystemRender = shouldUseTextureRenderForSystemPlayer(videoView == null ? null : videoView.getContext());
+        int renderType = preferTextureSystemRender ? 0 : 1;
         RenderViewFactory renderViewFactory = null;
         switch (renderType) {
             case 0:

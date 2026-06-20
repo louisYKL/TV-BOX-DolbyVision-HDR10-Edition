@@ -23,6 +23,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 
@@ -94,6 +96,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         setOptions();
         applyAudioOutputConfiguration();
         restoreRequestedVolume();
+        logInfo("echo-system-audio init focusStream=music");
         mMediaPlayer.setOnErrorListener(this);
         mMediaPlayer.setOnCompletionListener(this);
         mMediaPlayer.setOnInfoListener(this);
@@ -523,6 +526,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 mIsPreparing = false;
             }
             restoreRequestedVolume();
+            logTrackState("render-start");
         } else {
             mPlayerEventListener.onInfo(what, extra);
         }
@@ -568,6 +572,8 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         mState = STATE_PREPARED;
         applyVideoScalingMode(mp);
         restoreRequestedVolume();
+        logTrackState("prepared");
+        ensurePreferredAudioTrackSelected("prepared");
         mPlayerEventListener.onPrepared();
         if (!isVideo()) {
             start();
@@ -639,12 +645,15 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                         .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
                         .build();
                 mMediaPlayer.setAudioAttributes(audioAttributes);
+                logInfo("echo-system-audio attrs usage=media content=movie");
             } else {
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                logInfo("echo-system-audio stream=music");
             }
             mMediaPlayer.setScreenOnWhilePlaying(true);
         } catch (RuntimeException e) {
             Log.w(TAG, "applyAudioOutputConfiguration failed in state=" + mState, e);
+            writeRuntimeLog("echo-system-audio config-failed state=" + mState + " err=" + e.getMessage());
         }
     }
 
@@ -654,9 +663,99 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         }
         try {
             mMediaPlayer.setVolume(1f, 1f);
+            logInfo("echo-system-audio volume=100");
         } catch (RuntimeException e) {
             Log.w(TAG, "restoreRequestedVolume failed in state=" + mState, e);
+            writeRuntimeLog("echo-system-audio volume-failed state=" + mState + " err=" + e.getMessage());
         }
+    }
+
+    private void ensurePreferredAudioTrackSelected(String reason) {
+        if (mMediaPlayer == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
+        try {
+            MediaPlayer.TrackInfo[] trackInfos = mMediaPlayer.getTrackInfo();
+            if (trackInfos == null || trackInfos.length == 0) {
+                logInfo("echo-system-audio-track none reason=" + reason);
+                return;
+            }
+            int selectedAudio = mMediaPlayer.getSelectedTrack(MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO);
+            if (selectedAudio >= 0 && selectedAudio < trackInfos.length) {
+                MediaPlayer.TrackInfo selected = trackInfos[selectedAudio];
+                if (selected != null && selected.getTrackType() == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO) {
+                    logInfo("echo-system-audio-track keep reason=" + reason + " index=" + selectedAudio
+                            + " lang=" + safeLanguage(selected.getLanguage()));
+                    return;
+                }
+            }
+            int fallbackIndex = -1;
+            for (int i = 0; i < trackInfos.length; i++) {
+                MediaPlayer.TrackInfo info = trackInfos[i];
+                if (info != null && info.getTrackType() == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO) {
+                    fallbackIndex = i;
+                    break;
+                }
+            }
+            if (fallbackIndex >= 0) {
+                mMediaPlayer.selectTrack(fallbackIndex);
+                MediaPlayer.TrackInfo selected = trackInfos[fallbackIndex];
+                logInfo("echo-system-audio-track select reason=" + reason + " index=" + fallbackIndex
+                        + " lang=" + safeLanguage(selected == null ? null : selected.getLanguage()));
+            } else {
+                logInfo("echo-system-audio-track missing reason=" + reason);
+            }
+        } catch (Throwable th) {
+            writeRuntimeLog("echo-system-audio-track failed reason=" + reason + " err=" + th.getMessage());
+        }
+    }
+
+    private void logTrackState(String reason) {
+        if (mMediaPlayer == null || !canInspectTrackInfo() || Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+            return;
+        }
+        try {
+            MediaPlayer.TrackInfo[] trackInfos = mMediaPlayer.getTrackInfo();
+            if (trackInfos == null) {
+                logInfo("echo-system-track reason=" + reason + " none");
+                return;
+            }
+            int selectedAudio = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                    ? mMediaPlayer.getSelectedTrack(MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO) : -1;
+            int selectedTimedText = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                    ? mMediaPlayer.getSelectedTrack(MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT) : -1;
+            int selectedSubtitle = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                    ? mMediaPlayer.getSelectedTrack(MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_SUBTITLE) : -1;
+            List<String> summary = new ArrayList<>();
+            for (int i = 0; i < trackInfos.length; i++) {
+                MediaPlayer.TrackInfo info = trackInfos[i];
+                if (info == null) {
+                    continue;
+                }
+                int type = info.getTrackType();
+                String tag;
+                if (type == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_VIDEO) {
+                    tag = "v";
+                } else if (type == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_AUDIO) {
+                    tag = "a";
+                } else if (type == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT) {
+                    tag = "tt";
+                } else if (type == MediaPlayer.TrackInfo.MEDIA_TRACK_TYPE_SUBTITLE) {
+                    tag = "sub";
+                } else {
+                    tag = String.valueOf(type);
+                }
+                boolean selected = i == selectedAudio || i == selectedTimedText || i == selectedSubtitle;
+                summary.add(i + ":" + tag + ":" + safeLanguage(info.getLanguage()) + (selected ? "*" : ""));
+            }
+            logInfo("echo-system-track reason=" + reason + " " + TextUtils.join(",", summary));
+        } catch (Throwable th) {
+            writeRuntimeLog("echo-system-track failed reason=" + reason + " err=" + th.getMessage());
+        }
+    }
+
+    private String safeLanguage(String language) {
+        return TextUtils.isEmpty(language) ? "und" : language;
     }
 
     private boolean canAccessPlaybackParams() {

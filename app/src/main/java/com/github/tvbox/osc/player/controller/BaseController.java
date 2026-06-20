@@ -104,6 +104,7 @@ public abstract class BaseController extends BaseVideoController implements Gest
         super.initView();
         mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         mGestureDetector = new GestureDetector(getContext(), this);
+        mGestureDetector.setOnDoubleTapListener(this);
         setOnTouchListener(this);
         mSlideInfo = findViewWithTag("vod_control_slide_info");
         mLoading = findViewWithTag("vod_control_loading");

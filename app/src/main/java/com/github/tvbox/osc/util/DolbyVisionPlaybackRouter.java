@@ -92,8 +92,13 @@ public final class DolbyVisionPlaybackRouter {
                 && url != null
                 && url.contains("/proxy/play/")
                 && (!streamProbe.hasHdr10BaseLayer || streamProbe.dolbyVisionProfile <= 0);
-        boolean preferNativeHdrSystem = caps.supportsNativeDolbyVision()
-                && caps.displaySupportsHdr()
+        boolean nativeDolbyVisionDevice = caps.supportsNativeDolbyVision() && caps.displaySupportsHdr();
+        if (nativeDolbyVisionDevice) {
+            // 真实具备原生杜比视界解码器 + 显示能力的设备，不应因为 local proxy / Matroska
+            // 预探测缺少 hdr10Base/profile 就被错误压到兼容链。这里统一保留系统原生 DV。
+            localProxyMatroskaDvNeedsCompat = false;
+        }
+        boolean preferNativeHdrSystem = nativeDolbyVisionDevice
                 && !localProxyMatroskaDvNeedsCompat;
         boolean allowSystemForHdrContainer = preferNativeHdrSystem && requiresHdrOutput;
         boolean systemCanOpenContainer = !matroskaLike
@@ -105,7 +110,7 @@ public final class DolbyVisionPlaybackRouter {
 
         if (looksLikeDolbyVision) {
             // 路由2：设备能端到端原生 DV 且容器系统播放器能打开 → 系统播放器原生杜比视界。
-            if (caps.supportsNativeDolbyVision() && systemCanOpenContainer && !localProxyMatroskaDvNeedsCompat) {
+            if (nativeDolbyVisionDevice && systemCanOpenContainer && !localProxyMatroskaDvNeedsCompat) {
                 LOG.i("echo-dolby-route route=native-dv player=" + PlayerHelper.PLAYER_TYPE_SYSTEM
                         + " caps=" + caps.summary
                         + " nativeHdrSystem=" + preferNativeHdrSystem
@@ -119,8 +124,7 @@ public final class DolbyVisionPlaybackRouter {
             // 64位手机/平板同样必须先具备真实 DV 解码器。
             // 只有严格满足原生解码能力时，才保留系统原生 DV 链路。
             if (App.isJava64Build()
-                    && caps.supportsNativeDolbyVision()
-                    && caps.displaySupportsHdr()
+                    && nativeDolbyVisionDevice
                     && !localProxyMatroskaDvNeedsCompat) {
                 LOG.i("echo-dolby-route route=native-dv-java64 player=" + PlayerHelper.PLAYER_TYPE_SYSTEM
                         + " caps=" + caps.summary
@@ -140,6 +144,23 @@ public final class DolbyVisionPlaybackRouter {
                     || (matroskaLike && streamProbe.dolbyVisionProfile < 0)
                     || streamProbe.dolbyVisionProfile == 7
                     || streamProbe.dolbyVisionProfile == 8;
+            boolean canPreferSystemHdr10BaseLayer = !App.isJava64Build()
+                    && !nativeDolbyVisionDevice
+                    && canUseHdr10BaseLayer
+                    && caps.displaySupportsHdr()
+                    && caps.hevcMain10Decoder;
+            if (canPreferSystemHdr10BaseLayer) {
+                LOG.i("echo-dolby-route route=dv-base-hdr10-system player=" + PlayerHelper.PLAYER_TYPE_SYSTEM
+                        + " caps=" + caps.summary
+                        + " streamDv=" + streamDetectedDv
+                        + " profile=" + streamProbe.dolbyVisionProfile
+                        + " hdr10Base=" + streamProbe.hasHdr10BaseLayer
+                        + " matroska=" + matroskaLike + " probe=" + streamProbe.summary
+                        + " url=" + safeSnippet(url));
+                return new Decision(true, false, false, false, false, "", true,
+                        PlayerHelper.PLAYER_TYPE_SYSTEM,
+                        "dv-hdr10-base-layer-system");
+            }
             if (canUseHdr10BaseLayer && caps.displaySupportsHdr() && caps.hevcMain10Decoder) {
                 LOG.i("echo-dolby-route route=dv-base-hdr10 player=" + PlayerHelper.PLAYER_TYPE_DOLBY_VISION_COMPAT
                         + " caps=" + caps.summary
@@ -158,7 +179,7 @@ public final class DolbyVisionPlaybackRouter {
             boolean preferHdr = caps.displaySupportsHdr();
             String reason = (matroskaLike ? "dv-matroska-" : "dv-")
                     + (preferHdr ? "map-hdr" : "map-sdr")
-                    + (caps.supportsNativeDolbyVision() ? "-mkv-no-system" : "-no-dv-decoder");
+                    + (nativeDolbyVisionDevice ? "-mkv-no-system" : "-no-dv-decoder");
             LOG.i("echo-dolby-route route=dv-map player=" + PlayerHelper.PLAYER_TYPE_DOLBY_VISION_COMPAT
                     + " caps=" + caps.summary + " preferHdr=" + preferHdr
                     + " streamDv=" + streamDetectedDv
