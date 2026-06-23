@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:state_pressed="true">
+        <shape>
+            <corners android:radius="@dimen/vs_18" />
+            <solid android:color="#E1323D49"/>
+            <stroke android:width="@dimen/vs_1" android:color="@color/apple_tv_focus" />
+        </shape>
+    </item>
+    <item android:state_focused="false" android:state_pressed="true">
+        <shape>
+            <corners android:radius="@dimen/vs_18" />
+            <solid android:color="#E1323D49"/>
+            <stroke android:width="@dimen/vs_1" android:color="@color/apple_tv_focus" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
+            <corners android:radius="@dimen/vs_18" />
+            <solid android:color="#E1323D49"/>
+            <stroke android:width="@dimen/vs_1" android:color="@color/apple_tv_focus" />
+        </shape>
+    </item>
+    <item android:state_focused="false" android:state_pressed="false">
+        <shape>
+            <corners android:radius="@dimen/vs_18" />
+            <solid android:color="#B4171D25"/>
+            <stroke android:width="@dimen/vs_1" android:color="#2FFFFFFF" />
+        </shape>
+    </item>
+</selector>

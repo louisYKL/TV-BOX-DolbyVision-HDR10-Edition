@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape>
+            <corners android:radius="@dimen/vs_12" />
+            <gradient
+                android:angle="270"
+                android:endColor="@color/apple_tv_panel_soft"
+                android:startColor="@color/apple_tv_panel" />
+            <stroke
+                android:width="@dimen/vs_2"
+                android:color="@color/apple_tv_focus" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <corners android:radius="@dimen/vs_12" />
+            <gradient
+                android:angle="270"
+                android:endColor="@color/apple_tv_accent_soft"
+                android:startColor="@color/apple_tv_panel_soft" />
+            <stroke
+                android:width="@dimen/vs_1"
+                android:color="#29FFFFFF" />
+        </shape>
+    </item>
+</selector>

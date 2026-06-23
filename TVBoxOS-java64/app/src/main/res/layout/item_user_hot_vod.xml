@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.tvbox.osc.ui.tv.widget.LiquidGlassPosterFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/vs_8"
+    android:focusable="true"
+    android:padding="@dimen/vs_4">
+
+    <com.github.tvbox.osc.ui.tv.widget.RoundedPosterLayout
+        android:id="@+id/mItemFrame"
+        android:layout_width="@dimen/vs_214"
+        android:layout_height="@dimen/vs_280">
+
+        <ImageView
+            android:id="@+id/ivThumb"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/vs_10"
+            android:layout_marginTop="@dimen/vs_10"
+            android:layout_marginEnd="@dimen/vs_10"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_6"
+                android:background="@drawable/bg_apple_tv_tag"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingStart="@dimen/vs_8"
+                android:paddingTop="@dimen/vs_4"
+                android:paddingEnd="@dimen/vs_8"
+                android:paddingBottom="@dimen/vs_4"
+                android:singleLine="true"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_16" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_apple_tv_scrim_bottom"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/vs_10"
+            android:paddingTop="@dimen/vs_24"
+            android:paddingEnd="@dimen/vs_10"
+            android:paddingBottom="@dimen/vs_10">
+
+            <TextView
+                android:id="@+id/tvNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="@dimen/vs_6"
+                android:background="@drawable/bg_apple_tv_tag"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:paddingStart="@dimen/vs_8"
+                android:paddingTop="@dimen/vs_4"
+                android:paddingEnd="@dimen/vs_8"
+                android:paddingBottom="@dimen/vs_4"
+                android:singleLine="true"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_16" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:singleLine="true"
+                android:text="Title"
+                android:textColor="@color/apple_tv_text_primary"
+                android:textSize="@dimen/ts_22" />
+        </LinearLayout>
+        
+        <FrameLayout
+            android:id="@+id/delFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/shape_user_delete"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@dimen/vs_80"
+                android:layout_height="@dimen/vs_80"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/vs_20"
+                android:src="@drawable/icon_delete" />
+
+        </FrameLayout>
+        
+    </com.github.tvbox.osc.ui.tv.widget.RoundedPosterLayout>
+</com.github.tvbox.osc.ui.tv.widget.LiquidGlassPosterFrameLayout>

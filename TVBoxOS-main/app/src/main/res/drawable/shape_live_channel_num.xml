@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="@dimen/vs_18" />
+    <gradient
+        android:angle="315"
+        android:endColor="@color/apple_tv_panel_soft"
+        android:startColor="@color/apple_tv_panel" />
+    <stroke
+        android:width="@dimen/vs_1"
+        android:color="@color/color_33FFFFFF" />
+</shape>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/vs_12"
+    android:tag="contrast-focus"
+    android:focusable="true"
+    android:paddingStart="@dimen/vs_6"
+    android:paddingEnd="@dimen/vs_6">
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="middle"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/vs_60"
+        android:paddingStart="@dimen/vs_18"
+        android:paddingTop="@dimen/vs_14"
+        android:paddingEnd="@dimen/vs_18"
+        android:paddingBottom="@dimen/vs_14"
+        android:singleLine="true"
+        android:textColor="@color/apple_tv_text_primary"
+        android:textSize="@dimen/ts_20" />
+</com.github.tvbox.osc.ui.tv.widget.LiquidGlassFrameLayout>

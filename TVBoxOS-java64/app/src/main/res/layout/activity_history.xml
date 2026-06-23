@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_apple_tv_shell">
+
+    <View
+        android:id="@+id/bgScrimTop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_apple_tv_scrim_top"
+        app:layout_constraintBottom_toTopOf="@id/historyPanel"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/bgScrimBottom"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_apple_tv_scrim_bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historyPanel" />
+
+    <LinearLayout
+        android:id="@+id/historyHeader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/vs_48"
+        android:layout_marginTop="@dimen/vs_20"
+        android:layout_marginEnd="@dimen/vs_48"
+        android:background="@drawable/bg_apple_tv_panel"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/vs_28"
+        android:paddingTop="@dimen/vs_18"
+        android:paddingEnd="@dimen/vs_28"
+        android:paddingBottom="@dimen/vs_18"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="历史记录"
+            android:textColor="@color/apple_tv_text_primary"
+            android:textSize="@dimen/ts_34"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/tvDelTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/vs_12"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="确定键删除当前选中记录"
+            android:textColor="@color/apple_tv_text_secondary"
+            android:textSize="@dimen/ts_22"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/tvDelete"
+            android:layout_width="@dimen/vs_54"
+            android:layout_height="@dimen/vs_54"
+            android:layout_marginStart="@dimen/vs_12"
+            android:background="@drawable/button_dialog_vod"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="@dimen/vs_6"
+            android:src="@drawable/icon_delete" />
+
+        <ImageView
+            android:id="@+id/tvClear"
+            android:layout_width="@dimen/vs_54"
+            android:layout_height="@dimen/vs_54"
+            android:layout_marginStart="@dimen/vs_12"
+            android:background="@drawable/button_dialog_vod"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:padding="@dimen/vs_6"
+            android:src="@drawable/icon_clear" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/historyPanel"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/vs_48"
+        android:layout_marginTop="@dimen/vs_18"
+        android:layout_marginEnd="@dimen/vs_48"
+        android:layout_marginBottom="@dimen/vs_28"
+        android:background="@drawable/bg_apple_tv_panel"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/vs_24"
+        android:paddingTop="@dimen/vs_20"
+        android:paddingEnd="@dimen/vs_24"
+        android:paddingBottom="@dimen/vs_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/historyHeader">
+
+        <com.owen.tvrecyclerview.widget.TvRecyclerView
+            android:id="@+id/mGridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/vs_18"
+            android:paddingTop="@dimen/vs_18"
+            android:paddingEnd="@dimen/vs_18"
+            android:paddingBottom="@dimen/vs_18"
+            app:tv_horizontalSpacingWithMargins="@dimen/vs_22"
+            app:tv_selectedItemIsCentered="true"
+            app:tv_verticalSpacingWithMargins="@dimen/vs_22" />
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
