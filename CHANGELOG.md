@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+- 将 `java32`、`java64`、`hisense32` 三条线统一同步到 `0.1.5` 并重新发布。
+- 三端 APK 继续独立构建、独立打包、独立上传。
+- 本次 release 只做版本同步和发布资料补齐，不改播放功能。
+
 ## 0.1.4
 
 - 将 `TVBoxOS-main`、`TVBoxOS-java64`、`TVBoxOS-hisense` 三个目录作为一个 GitHub 源码仓统一发布。
