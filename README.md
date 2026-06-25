@@ -102,7 +102,7 @@
 ├─ TVBoxOS-java64/      64 位 Android 独立线
 ├─ TVBoxOS-hisense/     海信 32 位独立线
 ├─ CHANGELOG.md         汇总更新记录
-├─ RELEASE_NOTES_v0.1.4.md
+├─ RELEASE_NOTES_v0.1.5.md
 └─ README.md
 ```
 
