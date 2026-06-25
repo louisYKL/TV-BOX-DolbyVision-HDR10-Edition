@@ -6,16 +6,16 @@
 重点不是堆功能按钮，而是把系统硬解、HDR 激发、Dolby Vision 路由、字幕、音频与客厅交互这条链路做扎实。
 
 <p>
-  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.5"><img alt="Release" src="https://img.shields.io/badge/release-v0.1.5-111111?style=for-the-badge"></a>
+  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.6"><img alt="Release" src="https://img.shields.io/badge/release-v0.1.5-111111?style=for-the-badge"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android%20TV%20%7C%20Android-black?style=for-the-badge">
   <img alt="Variants" src="https://img.shields.io/badge/variants-java32%20%7C%20java64%20%7C%20hisense32-black?style=for-the-badge">
   <img alt="Playback" src="https://img.shields.io/badge/playback-HDR10%20%7C%20HDR10%2B%20%7C%20Dolby%20Vision-black?style=for-the-badge">
 </p>
 
 <p>
-  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.5">下载 v0.1.5</a> ·
+  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.6">下载 v0.1.6</a> ·
   <a href="CHANGELOG.md">更新记录</a> ·
-  <a href="RELEASE_NOTES_v0.1.5.md">详细发布说明</a>
+  <a href="RELEASE_NOTES_v0.1.6.md">详细发布说明</a>
 </p>
 
 </div>
@@ -151,15 +151,15 @@
 
 | 文件 | 说明 |
 | --- | --- |
-| `TVBox_v0.1.5_java32.apk` | 32 位电视主线安装包 |
-| `TVBox_v0.1.5_java64.apk` | 64 位 Android 安装包 |
-| `TVBox_v0.1.5_hisense32.apk` | 海信 32 位专项安装包 |
-| `TVBox_v0.1.5_RELEASE_NOTES.md` | 详细发布说明 |
-| `TVBox_v0.1.5_SHA256SUMS.txt` | 产物校验信息 |
+| `TVBox_v0.1.6_java32.apk` | 32 位电视主线安装包 |
+| `TVBox_v0.1.6_java64.apk` | 64 位 Android 安装包 |
+| `TVBox_v0.1.6_hisense32.apk` | 海信 32 位专项安装包 |
+| `TVBox_v0.1.6_RELEASE_NOTES.md` | 详细发布说明 |
+| `TVBox_v0.1.6_SHA256SUMS.txt` | 产物校验信息 |
 
 下载入口：
 
-- [GitHub Releases / v0.1.5](https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.5)
+- [GitHub Releases / v0.1.6](https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.6)
 
 ## 本地构建
 
@@ -195,7 +195,7 @@ cd TVBoxOS-hisense
 ## 文档入口
 
 - [总更新记录](CHANGELOG.md)
-- [v0.1.5 详细发布说明](RELEASE_NOTES_v0.1.5.md)
+- [v0.1.5 详细发布说明](RELEASE_NOTES_v0.1.6.md)
 - [TVBoxOS-main README](TVBoxOS-main/README.md)
 - [TVBoxOS-java64 README](TVBoxOS-java64/README.md)
 - [TVBoxOS-hisense README](TVBoxOS-hisense/README.md)
