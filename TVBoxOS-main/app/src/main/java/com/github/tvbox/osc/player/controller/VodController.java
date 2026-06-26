@@ -2044,7 +2044,10 @@ public class VodController extends BaseController {
         if (videoView == null || videoView.getMediaPlayer() == null) {
             return true;
         }
-        return !(videoView.getMediaPlayer() instanceof xyz.doikki.videoplayer.player.AndroidMediaPlayer);
+        if (videoView.getMediaPlayer() instanceof xyz.doikki.videoplayer.player.AndroidMediaPlayer) {
+            return !isJava64TouchPhone();
+        }
+        return true;
     }
 
     private MyVideoView findVideoView(View view) {

@@ -51,6 +51,8 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         implements MediaPlayerControl, AbstractPlayer.PlayerEventListener {
     private static final String TAG = "VideoView";
     private static final long COMPLETION_END_TOLERANCE_MS = 10_000L;
+    private static final long PERSIST_END_TOLERANCE_MS = COMPLETION_END_TOLERANCE_MS;
+    protected static final long PERSIST_PROGRESS_SKIP = -1L;
 
     protected P mMediaPlayer;//播放器
     protected PlayerFactory<P> mPlayerFactory;//工厂类，用于实例化播放核心
@@ -84,6 +86,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     protected AssetFileDescriptor mAssetFileDescriptor;//assets文件
 
     protected long mCurrentPosition;//当前正在播放视频的位置
+    protected long mLastKnownDuration;
     protected boolean mPendingResumeSeekAfterRender;
     protected boolean mResumeSeekAppliedAfterRender;
 
@@ -504,10 +507,67 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
      * 保存播放进度
      */
     protected void saveProgress() {
-        if (mProgressManager != null && mCurrentPosition > 0) {
-            L.d("saveProgress: " + mCurrentPosition);
-            mProgressManager.saveProgress(mProgressKey == null ? mUrl : mProgressKey, mCurrentPosition);
+        long persistablePosition = resolvePersistableProgressPosition();
+        if (persistablePosition >= 0L) {
+            saveProgress(persistablePosition);
         }
+    }
+
+    protected void saveProgress(long persistablePosition) {
+        if (mProgressManager != null && persistablePosition >= 0L) {
+            L.d("saveProgress: " + persistablePosition);
+            mProgressManager.saveProgress(mProgressKey == null ? mUrl : mProgressKey, persistablePosition);
+        }
+    }
+
+    /**
+     * Resolve a progress value that is safe to persist as a resume point.
+     * Positions near the end are treated as completed playback and cleared.
+     */
+    protected long resolvePersistableProgressPosition() {
+        if (mCurrentPlayState == STATE_PLAYBACK_COMPLETED) {
+            return 0L;
+        }
+        if (mCurrentPlayState == STATE_START_ABORT
+                || mCurrentPlayState == STATE_IDLE
+                || mCurrentPlayState == STATE_ERROR
+                || mCurrentPlayState == STATE_PREPARING
+                || mCurrentPlayState == STATE_BUFFERING) {
+            return PERSIST_PROGRESS_SKIP;
+        }
+        long position = Math.max(0L, mCurrentPosition);
+        if (position <= 0L) {
+            return PERSIST_PROGRESS_SKIP;
+        }
+        if (mMediaPlayer instanceof AndroidMediaPlayer) {
+            AndroidMediaPlayer player = (AndroidMediaPlayer) mMediaPlayer;
+            if (player.isPositionQueryUnstable() || player.isSeekInFlight()) {
+                return PERSIST_PROGRESS_SKIP;
+            }
+        }
+        long duration = resolvePersistableDuration();
+        if (duration > 0L) {
+            long finishThreshold = Math.max(0L, duration - PERSIST_END_TOLERANCE_MS);
+            if (position >= finishThreshold) {
+                return 0L;
+            }
+        }
+        return position;
+    }
+
+    protected long resolvePersistableDuration() {
+        if (mMediaPlayer == null) {
+            return mLastKnownDuration;
+        }
+        try {
+            long duration = mMediaPlayer.getDuration();
+            if (duration > 0L) {
+                mLastKnownDuration = duration;
+                return duration;
+            }
+        } catch (Throwable ignored) {
+        }
+        return mLastKnownDuration;
     }
 
     /**
@@ -558,9 +618,17 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     @Override
     public long getDuration() {
         if (isInPlaybackState()) {
-            return mMediaPlayer.getDuration();
+            try {
+                long duration = mMediaPlayer.getDuration();
+                if (duration > 0L) {
+                    mLastKnownDuration = duration;
+                }
+                return duration;
+            } catch (Throwable ignored) {
+                return 0;
+            }
         }
-        return 0;
+        return mLastKnownDuration;
     }
 
     /**
@@ -626,6 +694,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     @Override
     public void onPrepared() {
         setPlayState(STATE_PREPARED);
+        resolvePersistableDuration();
         if (mAudioFocusHelper != null) {
             mAudioFocusHelper.requestFocus();
         }
@@ -688,9 +757,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
             return;
         }
         mCurrentPosition = 0;
-        if (mProgressManager != null) {
-            mProgressManager.saveProgress(mProgressKey == null ? mUrl : mProgressKey, 0);
-        }
+        saveProgress(0L);
         setPlayState(STATE_PLAYBACK_COMPLETED);
     }
 
@@ -723,14 +790,17 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     }
 
     private long resolveCompletionDurationForGuard() {
-        if (mMediaPlayer == null) {
-            return 0L;
-        }
         try {
-            return mMediaPlayer.getDuration();
+            if (mMediaPlayer != null) {
+                long duration = mMediaPlayer.getDuration();
+                if (duration > 0L) {
+                    mLastKnownDuration = duration;
+                    return duration;
+                }
+            }
         } catch (Throwable ignored) {
-            return 0L;
         }
+        return mLastKnownDuration;
     }
 
     /**
@@ -790,6 +860,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         mAssetFileDescriptor = null;
         mUrl = url;
         mHeaders = headers;
+        mLastKnownDuration = 0L;
     }
 
     /**
@@ -798,6 +869,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     public void setAssetFileDescriptor(AssetFileDescriptor fd) {
         mUrl = null;
         this.mAssetFileDescriptor = fd;
+        mLastKnownDuration = 0L;
     }
 
     public void setProgressKey(String key) {

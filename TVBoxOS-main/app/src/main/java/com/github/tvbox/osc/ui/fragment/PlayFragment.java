@@ -217,7 +217,7 @@ public class PlayFragment extends BaseLazyFragment {
             return;
         }
         long position = resolvePersistablePlaybackPosition();
-        if (position > 0L) {
+        if (position >= 0L) {
             CacheManager.save(MD5.string2MD5(persistKey), position);
             if (!TextUtils.isEmpty(progressKey) && !TextUtils.equals(progressKey, persistKey)) {
                 CacheManager.save(MD5.string2MD5(progressKey), position);
@@ -228,16 +228,16 @@ public class PlayFragment extends BaseLazyFragment {
 
     private long resolvePersistablePlaybackPosition() {
         if (mVideoView == null) {
-            return 0L;
+            return -1L;
         }
         try {
             long position = mVideoView.resolvePersistablePosition();
-            if (position > 0L) {
+            if (position >= 0L) {
                 return position;
             }
         } catch (Throwable ignored) {
         }
-        return 0L;
+        return -1L;
     }
 
     private void persistPlaybackHistoryRecordAsync() {

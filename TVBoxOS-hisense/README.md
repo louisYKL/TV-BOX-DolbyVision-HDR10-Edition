@@ -2,7 +2,7 @@
 
 # 影视仓 海信版
 
-> 面向海信 Android / Google TV 机型的独立 32 位 TVBox 分支。
+> 面向海信 Android / Google TV 机型的独立 TVBox 分支。
 
 </div>
 
@@ -16,7 +16,7 @@
 - 独立包名
 - 独立版本号
 - 独立 APK 输出
-- 只保留 32 位 `armeabi-v7a`
+- 默认打包 `armeabi-v7a` + `arm64-v8a`
 
 ## 为什么要有海信版
 
@@ -27,20 +27,20 @@
 
 所以“海信版 APK”只对海信 Android / Google TV 机型成立，不能拿同一个 APK 去覆盖 VIDAA 机型。
 
-同时，海信 Android 电视在实际侧装场景里，对 32 位 APK 的兼容通常比混合 ABI / 64 位包更稳。这个仓库因此固定为 32 位电视包，并启用更保守的 Native 库提取方式。
+同时，不同海信电视机型对可安装 ABI 的支持并不一致。当前默认 APK 会同时携带 `armeabi-v7a` 和 `arm64-v8a`，避免因为单一 32 位包在部分机型上触发安装失败。
 
 ## 当前版本
 
 - 包名：`com.github.tvbox.osc.hisense`
 - 版本号：`0.1.4-hisense`
-- ABI：`armeabi-v7a`
+- ABI：`armeabi-v7a` + `arm64-v8a`
 - 最低系统：Android 4.4 / API 19
 
 ## 构建输出
 
 默认输出：
 
-- `TVBoxHisense_debug-armv7.apk`
+- `TVBoxHisense_debug-universal.apk`
 
 构建命令：
 
@@ -51,7 +51,7 @@
 ## 兼容策略
 
 - 保留 Android TV / Leanback 启动器入口和 TV banner。
-- APK 仅打包 `armeabi-v7a`。
+- APK 同时打包 `armeabi-v7a` 和 `arm64-v8a`。
 - `extractNativeLibs=true`。
 - `jniLibs.useLegacyPackaging=true`。
 - 不依赖仓外 SDK / JDK / Gradle / 缓存目录。

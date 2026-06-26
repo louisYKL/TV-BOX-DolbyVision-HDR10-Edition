@@ -151,13 +151,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
             String resolvedUrl = parsed.url;
             String playbackUrl = resolvedUrl;
             resetSystemTrackState();
-            if (shouldUnwrapLocalLiveProxyForJava64SystemPlayback(resolvedUrl)) {
-                String unwrappedLiveUrl = unwrapLocalProxyLiveUrl(resolvedUrl);
-                if (!TextUtils.equals(resolvedUrl, unwrappedLiveUrl)) {
-                    playbackUrl = unwrappedLiveUrl;
-                    logInfo("echo-system-url java64-live unwrapLocalProxyLive -> " + playbackUrl);
-                }
-            } else if (shouldUnwrapAppStreamProxyForNativeJava64Dv(resolvedUrl, parsed.headers)) {
+            if (shouldUnwrapAppStreamProxyForNativeJava64Dv(resolvedUrl, parsed.headers)) {
                 String unwrappedNativeDvUrl = unwrapLocalProxyStream(resolvedUrl);
                 if (!TextUtils.equals(resolvedUrl, unwrappedNativeDvUrl)) {
                     playbackUrl = unwrappedNativeDvUrl;
@@ -229,34 +223,6 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         return path;
     }
 
-    private String unwrapLocalProxyLiveUrl(String path) {
-        if (TextUtils.isEmpty(path)) {
-            return path;
-        }
-        try {
-            Uri uri = Uri.parse(path);
-            if (!isLocalHost(uri.getHost())) {
-                return path;
-            }
-            if (!"/proxy".equals(uri.getPath()) || !"live".equalsIgnoreCase(uri.getQueryParameter("go"))) {
-                return path;
-            }
-            String nestedUrl = uri.getQueryParameter("url");
-            if (TextUtils.isEmpty(nestedUrl)) {
-                return path;
-            }
-            Uri nestedUri = Uri.parse(nestedUrl);
-            if (nestedUri.getHost() == null || isLocalHost(nestedUri.getHost())) {
-                return path;
-            }
-            String normalized = PlaybackUrlNormalizer.normalizeHttpUrl(nestedUrl);
-            Log.i(TAG, "unwrapLocalProxyLiveUrl -> nested remote live url " + normalized);
-            return normalized;
-        } catch (Throwable ignored) {
-        }
-        return path;
-    }
-
     @Override
     public void setDataSource(AssetFileDescriptor fd) {
         try {
@@ -280,6 +246,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
             return;
         }
         try {
+            rebindLastVideoOutputTarget("start");
             restoreRequestedVolume();
             logTrackState("start-before");
             mMediaPlayer.start();
@@ -440,6 +407,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     @Override
     public void release() {
         if (mMediaPlayer == null) {
+            clearLastVideoOutputTarget("release-already-null");
             mState = STATE_RELEASED;
             return;
         }
@@ -476,6 +444,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         mLastDispatchedSubtitleText = null;
         mLastDispatchedSubtitleAtMs = 0L;
         resetSystemTrackState();
+        clearLastVideoOutputTarget("release");
         try {
             mediaPlayer.setSurface(null);
         } catch (Exception e) {
@@ -492,6 +461,12 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
             Log.w(TAG, "release failed", e);
         }
         closeCustomDataSourceQuietly();
+    }
+
+    private void clearLastVideoOutputTarget(String reason) {
+        mLastSurface = null;
+        mLastDisplayHolder = null;
+        logInfo("echo-system-target cleared reason=" + reason);
     }
 
     @Override
@@ -759,6 +734,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 + " matroska=" + mCurrentDataSourceMatroskaLike
                 + " hdrLike=" + isCurrentHdrLikeDataSource());
         if (hasVideoOutputTarget()) {
+            rebindLastVideoOutputTarget("prepared");
             start();
         } else {
             mPendingStartAfterDisplayReady = true;
@@ -1164,6 +1140,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         logInfo("echo-system-start-gate display-ready matroska=" + mCurrentDataSourceMatroskaLike
                 + " hdrLike=" + isCurrentHdrLikeDataSource());
         mPendingStartAfterDisplayReady = false;
+        rebindLastVideoOutputTarget("display-ready");
         start();
     }
 
@@ -1804,11 +1781,16 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     }
 
     private void rebindLastVideoOutputTarget() {
+        rebindLastVideoOutputTarget("rebind");
+    }
+
+    private void rebindLastVideoOutputTarget(String reason) {
         if (mMediaPlayer == null) {
             return;
         }
         try {
             if (mLastSurface != null && mLastSurface.isValid()) {
+                logInfo("echo-system-target rebind reason=" + reason + " type=surface");
                 mMediaPlayer.setSurface(mLastSurface);
                 return;
             }
@@ -1816,6 +1798,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         }
         try {
             if (mLastDisplayHolder != null) {
+                logInfo("echo-system-target rebind reason=" + reason + " type=display");
                 mMediaPlayer.setDisplay(mLastDisplayHolder);
             }
         } catch (Throwable ignored) {
@@ -2195,10 +2178,6 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         } catch (Throwable ignored) {
             return null;
         }
-    }
-
-    private boolean shouldUnwrapLocalLiveProxyForJava64SystemPlayback(String url) {
-        return isJava64TouchPhone() && isLocalLiveProxyUrl(url);
     }
 
     public interface OnTimedTextListener {

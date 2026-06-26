@@ -27,10 +27,11 @@ Or explicitly:
 
 ## Output
 
-- `app/build/outputs/apk/debug/TVBoxHisense_debug-armv7.apk`
+- `app/build/outputs/apk/debug/TVBoxHisense_debug-universal.apk`
 
 ## Notes
 
-- This repo is a standalone Hisense 32-bit Android TV project.
+- This repo is a standalone Hisense Android TV project.
+- The default APK now carries both `armeabi-v7a` and `arm64-v8a` so it can install on more Hisense TV variants.
 - It is not the shared multi-flavor build from the main TVBox workspace anymore.
 - Keep all toolchain state inside this repo.

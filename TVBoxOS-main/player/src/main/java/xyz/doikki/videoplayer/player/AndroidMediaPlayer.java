@@ -70,6 +70,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     private boolean mCurrentDataSourceMatroskaLike;
     private Surface mLastSurface;
     private SurfaceHolder mLastDisplayHolder;
+    private boolean mHasVideoOutputTarget;
     private boolean mWasPlayingBeforeSeek;
     private boolean mPendingResumeAfterSeek;
     private boolean mPendingStartAfterDisplayReady;
@@ -117,6 +118,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     public void initPlayer() {
         mMediaPlayer = new MediaPlayer();
         mState = STATE_IDLE;
+        mHasVideoOutputTarget = false;
         resetSystemTrackState();
         setOptions();
         applyAudioOutputConfiguration();
@@ -319,6 +321,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
             restoreRequestedVolume();
             mMediaPlayer.setSurface(null);
             mMediaPlayer.setDisplay(null);
+            mHasVideoOutputTarget = false;
             mBufferedPercent = 0;
             mIsPreparing = false;
             mState = STATE_IDLE;
@@ -374,6 +377,10 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 return;
             }
             mWasPlayingBeforeSeek = isPlaying();
+            if (!mWasPlayingBeforeSeek && mState == STATE_STARTED) {
+                // Some TV firmwares briefly report false while playback is still active.
+                mWasPlayingBeforeSeek = true;
+            }
             mPendingResumeAfterSeek = mWasPlayingBeforeSeek || mState == STATE_PREPARED;
             mSeekInFlight = true;
             mLastSeekRequestPosition = target;
@@ -414,6 +421,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         mCurrentDataSourceUrl = null;
         mCurrentDataSourceHeaders = null;
         mCurrentDataSourceMatroskaLike = false;
+        mHasVideoOutputTarget = false;
         mForceSafePcmAudio = false;
         mNetworkSourceMode = NETWORK_SOURCE_MODE_AUTO;
         mJava64MissingAudioRecoveryAttempted = false;
@@ -441,6 +449,9 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         } catch (Exception e) {
             Log.w(TAG, "release failed", e);
         }
+        mLastSurface = null;
+        mLastDisplayHolder = null;
+        mHasVideoOutputTarget = false;
         closeCustomDataSourceQuietly();
     }
 
@@ -484,6 +495,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     @Override
     public void setSurface(Surface surface) {
         mLastSurface = surface;
+        mHasVideoOutputTarget = mMediaPlayer != null && surface != null && surface.isValid();
         if (mMediaPlayer == null) {
             Log.w(TAG, "setSurface ignored after release");
             return;
@@ -500,6 +512,10 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     @Override
     public void setDisplay(SurfaceHolder holder) {
         mLastDisplayHolder = holder;
+        mHasVideoOutputTarget = mMediaPlayer != null
+                && holder != null
+                && holder.getSurface() != null
+                && holder.getSurface().isValid();
         if (mMediaPlayer == null) {
             Log.w(TAG, "setDisplay ignored after release");
             return;
@@ -628,7 +644,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 }
                 mState = STATE_STARTED;
                 mPlayerEventListener.onInfo(AbstractPlayer.MEDIA_INFO_BUFFERING_END, 0);
-            } else if (canPause()) {
+            } else if (mState != STATE_STARTED) {
                 mState = STATE_PAUSED;
             }
         } catch (IllegalStateException e) {
@@ -1026,6 +1042,9 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     }
 
     private boolean hasVideoOutputTarget() {
+        if (!mHasVideoOutputTarget) {
+            return false;
+        }
         try {
             if (mLastSurface != null && mLastSurface.isValid()) {
                 return true;
@@ -1069,6 +1088,10 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
 
     public boolean isPositionQueryUnstable() {
         return shouldAvoidBlockingPositionQuery();
+    }
+
+    public boolean isSeekInFlight() {
+        return mSeekInFlight;
     }
 
     private boolean isCurrentHdrLikeDataSource() {

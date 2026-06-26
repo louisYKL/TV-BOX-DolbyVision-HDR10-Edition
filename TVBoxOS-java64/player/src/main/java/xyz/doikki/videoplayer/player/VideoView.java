@@ -465,16 +465,18 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
             stopFullScreen();
         }
         if (!isInIdleState()) {
-            //释放播放器
+            // 先让 renderView 断开对播放器的持有，避免 removeView 触发的 surface 回调
+            // 还命中已经释放的 MediaPlayer，造成 setDisplay/setSurface 的竞态。
+            if (mRenderView != null) {
+                IRenderView renderView = mRenderView;
+                mRenderView = null;
+                renderView.release();
+                mPlayerContainer.removeView(renderView.getView());
+            }
+            // 再释放播放器本体
             if (mMediaPlayer != null) {
                 mMediaPlayer.release();
                 mMediaPlayer = null;
-            }
-            //释放renderView
-            if (mRenderView != null) {
-                mPlayerContainer.removeView(mRenderView.getView());
-                mRenderView.release();
-                mRenderView = null;
             }
             //释放Assets资源
             if (mAssetFileDescriptor != null) {

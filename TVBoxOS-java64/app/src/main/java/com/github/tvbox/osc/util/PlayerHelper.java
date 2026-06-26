@@ -70,7 +70,9 @@ public class PlayerHelper {
             return false;
         }
         if (playerCfg != null && playerCfg.optBoolean(HawkConfig.PLAYER_IS_LIVE, false)) {
-            LOG.i("echo-player-render-force surface reason=java64-live");
+            // 直播页已经通过 LivePlayerManager 带下来了用户的渲染配置。
+            // 这里不要再强行改成 TextureView，否则会把用户选中的 SurfaceView 覆盖掉，
+            // 64 位直播就会退回到有声无画的错误路径。
             return false;
         }
         String outputMode = playerCfg == null ? "" : playerCfg.optString("dvm", "");
@@ -160,7 +162,15 @@ public class PlayerHelper {
                         + " output=" + outputMode
                         + " java64TouchPhone=" + isJava64TouchPhone(context));
             } else {
-                videoView.setPlayerFactory(AndroidMediaPlayerFactory.create());
+                boolean useJava64LiveCodecPlayer = isJava64TouchPhone(context)
+                        && playerCfg != null
+                        && playerCfg.optBoolean(HawkConfig.PLAYER_IS_LIVE, false);
+                if (useJava64LiveCodecPlayer) {
+                    videoView.setPlayerFactory(Java64CodecPlayerFactory.create());
+                    LOG.i("echo-player-backend live=java64-codec java64TouchPhone=true");
+                } else {
+                    videoView.setPlayerFactory(AndroidMediaPlayerFactory.create());
+                }
                 renderViewFactory = preferTextureSystemRender
                         ? TextureRenderViewFactory.create()
                         : SurfaceRenderViewFactory.create();

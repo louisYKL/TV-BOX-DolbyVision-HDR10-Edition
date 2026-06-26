@@ -374,6 +374,10 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 return;
             }
             mWasPlayingBeforeSeek = isPlaying();
+            if (!mWasPlayingBeforeSeek && mState == STATE_STARTED) {
+                // Some TV firmwares briefly report false while playback is still active.
+                mWasPlayingBeforeSeek = true;
+            }
             mPendingResumeAfterSeek = mWasPlayingBeforeSeek || mState == STATE_PREPARED;
             mSeekInFlight = true;
             mLastSeekRequestPosition = target;
@@ -628,7 +632,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 }
                 mState = STATE_STARTED;
                 mPlayerEventListener.onInfo(AbstractPlayer.MEDIA_INFO_BUFFERING_END, 0);
-            } else if (canPause()) {
+            } else if (mState != STATE_STARTED) {
                 mState = STATE_PAUSED;
             }
         } catch (IllegalStateException e) {

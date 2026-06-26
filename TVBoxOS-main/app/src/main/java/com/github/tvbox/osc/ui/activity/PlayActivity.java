@@ -242,7 +242,7 @@ public class PlayActivity extends BaseActivity {
             position = mVideoView.resolvePersistablePosition();
         } catch (Throwable ignored) {
         }
-        if (position > 0L) {
+        if (position >= 0L) {
             CacheManager.save(MD5.string2MD5(persistKey), position);
             if (!TextUtils.isEmpty(progressKey) && !TextUtils.equals(progressKey, persistKey)) {
                 CacheManager.save(MD5.string2MD5(progressKey), position);

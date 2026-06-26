@@ -30,6 +30,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionOverride;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.video.ColorInfo;
 
 import java.util.ArrayList;
@@ -139,7 +140,9 @@ public class Java64CodecPlayer extends AbstractPlayer implements CompatTrackSele
 
             @Override
             public void onPlayerError(PlaybackException error) {
-                log("echo-java64-codec error code=" + error.errorCode + " msg=" + error.getMessage());
+                log("echo-java64-codec error code=" + error.errorCode
+                        + " msg=" + error.getMessage()
+                        + " cause=" + describeThrowable(error.getCause()));
                 notifyError();
             }
 
@@ -242,11 +245,15 @@ public class Java64CodecPlayer extends AbstractPlayer implements CompatTrackSele
                 httpFactory.setDefaultRequestProperties(requestHeaders);
             }
             player.clearMediaItems();
-            player.setMediaItem(new MediaItem.Builder()
-                    .setUri(Uri.parse(dataSource))
-                    .build());
+            MediaItem.Builder mediaItemBuilder = new MediaItem.Builder()
+                    .setUri(Uri.parse(dataSource));
+            String mimeType = resolveMediaItemMimeType(dataSource);
+            if (!TextUtils.isEmpty(mimeType)) {
+                mediaItemBuilder.setMimeType(mimeType);
+            }
+            player.setMediaItem(mediaItemBuilder.build());
             player.prepare();
-            log("echo-java64-codec prepare url=" + dataSource);
+            log("echo-java64-codec prepare url=" + dataSource + " mime=" + (TextUtils.isEmpty(mimeType) ? "auto" : mimeType));
         } catch (Throwable th) {
             log("echo-java64-codec prepare failed " + th.getMessage());
             notifyError();
@@ -498,14 +505,17 @@ public class Java64CodecPlayer extends AbstractPlayer implements CompatTrackSele
         if (player == null) {
             return;
         }
+        if (surfaceHolder != null) {
+            Surface holderSurface = surfaceHolder.getSurface();
+            if (holderSurface != null && holderSurface.isValid()) {
+                player.setVideoSurfaceHolder(surfaceHolder);
+                log("echo-java64-codec holder-bound");
+                return;
+            }
+        }
         if (surface != null && surface.isValid()) {
             player.setVideoSurface(surface);
             log("echo-java64-codec surface-bound");
-            return;
-        }
-        if (surfaceHolder != null) {
-            player.setVideoSurfaceHolder(surfaceHolder);
-            log("echo-java64-codec holder-bound");
             return;
         }
         player.clearVideoSurface();
@@ -693,6 +703,52 @@ public class Java64CodecPlayer extends AbstractPlayer implements CompatTrackSele
     private void log(String message) {
         android.util.Log.i(TAG, message);
         LOG.i(message);
+    }
+
+    @Nullable
+    private String resolveMediaItemMimeType(@Nullable String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+        if (PlaybackUrlNormalizer.isHlsLike(url)) {
+            return MimeTypes.APPLICATION_M3U8;
+        }
+        try {
+            Uri uri = Uri.parse(url);
+            if (uri == null) {
+                return null;
+            }
+            String go = uri.getQueryParameter("go");
+            String type = uri.getQueryParameter("type");
+            String format = uri.getQueryParameter("format");
+            if ("live".equalsIgnoreCase(go)
+                    || "m3u8".equalsIgnoreCase(type)
+                    || "m3u8".equalsIgnoreCase(format)) {
+                return MimeTypes.APPLICATION_M3U8;
+            }
+        } catch (Throwable ignored) {
+        }
+        return null;
+    }
+
+    private String describeThrowable(@Nullable Throwable throwable) {
+        if (throwable == null) {
+            return "null";
+        }
+        StringBuilder builder = new StringBuilder(throwable.getClass().getSimpleName());
+        String message = throwable.getMessage();
+        if (!TextUtils.isEmpty(message)) {
+            builder.append(":").append(message);
+        }
+        Throwable cause = throwable.getCause();
+        if (cause != null && cause != throwable) {
+            builder.append(" <- ").append(cause.getClass().getSimpleName());
+            String causeMessage = cause.getMessage();
+            if (!TextUtils.isEmpty(causeMessage)) {
+                builder.append(":").append(causeMessage);
+            }
+        }
+        return builder.toString();
     }
 
     private void updateRuntimeVideoMode(@Nullable Format format, String reason) {
