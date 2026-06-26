@@ -6,14 +6,14 @@
 重点不是堆功能按钮，而是把系统硬解、HDR、Dolby Vision、字幕、音轨、快进和遥控器交互这条链路做扎实。
 
 <p>
-  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.7"><img alt="Release" src="https://img.shields.io/badge/release-v0.1.7-111111?style=for-the-badge"></a>
+  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.7.1"><img alt="Release" src="https://img.shields.io/badge/release-v0.1.7-111111?style=for-the-badge"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Android%20TV%20%7C%20Android-black?style=for-the-badge">
   <img alt="Variants" src="https://img.shields.io/badge/variants-java32%20%7C%20java64%20%7C%20hisense32-black?style=for-the-badge">
   <img alt="Playback" src="https://img.shields.io/badge/playback-HDR10%20%7C%20HDR10%2B%20%7C%20Dolby%20Vision-black?style=for-the-badge">
 </p>
 
 <p>
-  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.7">下载 v0.1.7</a> ·
+  <a href="https://github.com/louisYKL/TVBOX-DolbyVision-HDR10-Edition/releases/tag/v0.1.7.1">下载 v0.1.7</a> ·
   <a href="CHANGELOG.md">更新记录</a> ·
   <a href="RELEASE_NOTES_v0.1.7.md">详细发布说明</a>
 </p>
