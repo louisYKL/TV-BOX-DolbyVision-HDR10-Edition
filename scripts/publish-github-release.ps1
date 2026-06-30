@@ -245,7 +245,7 @@ foreach ($file in $assetFiles) {
     Remove-ReleaseAssetIfExists -Release $release -Headers $headers -FileName $file.Name -RepoApiBase $repoApiBase
 
     $contentType = Get-UploadContentType -Extension $file.Extension
-    $uploadUri = "$uploadBase?name=$([uri]::EscapeDataString($file.Name))"
+    $uploadUri = "${uploadBase}?name=$([uri]::EscapeDataString($file.Name))"
     $bytes = [System.IO.File]::ReadAllBytes($file.FullName)
 
     $uploadHeaders = @{
