@@ -36,8 +36,18 @@ host=github.com
         throw "Unable to read GitHub credential from git credential-manager."
     }
 
-    $credential = $raw | ConvertFrom-StringData
-    if (-not $credential.password) {
+    $credential = @{}
+    foreach ($line in ($raw -split "`r?`n")) {
+        if ([string]::IsNullOrWhiteSpace($line)) {
+            continue
+        }
+        $parts = $line -split "=", 2
+        if ($parts.Count -eq 2) {
+            $credential[$parts[0].Trim()] = $parts[1]
+        }
+    }
+
+    if (-not $credential.ContainsKey("password") -or -not $credential["password"]) {
         throw "GitHub credential does not contain a token."
     }
 
@@ -197,7 +207,7 @@ if (-not $remoteTag) {
 
 $credential = Get-GitHubCredential
 $headers = @{
-    Authorization = "token $($credential.password)"
+    Authorization = "token $($credential['password'])"
     Accept        = "application/vnd.github+json"
     "User-Agent"  = "tvbox-release-script"
 }
